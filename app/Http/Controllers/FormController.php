@@ -33,7 +33,15 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $form = Form::create([
+            'name' => $request->name,
+            'class' => $request->class,
+            'message' => $request->message,
+        ]);
+
+        return response()->json([
+            'form' => $form
+        ]);
     }
 
     /**
