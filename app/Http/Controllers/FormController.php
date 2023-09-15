@@ -47,9 +47,13 @@ class FormController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Form $form)
+    public function show(Form $form, string $id)
     {
-        //
+        $form = Form::where('id', $id)->first();
+
+        return response()->json([
+            'form' => $form
+        ]);
     }
 
     /**
