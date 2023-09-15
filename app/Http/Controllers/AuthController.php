@@ -12,7 +12,6 @@ class AuthController extends Controller
 {
     public function login(Request $request) {
         $validator = Validator::make($request->all(), [
-            'username' => ['required'],
             'email' => ['required'],
             'password' => ['required'],
         ]);
@@ -26,10 +25,11 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if(!$user || Hash::check($request->password, $user->password)) {
+        // Password Checking: || Hash::check($request->password, $user->password)
+        if(!$user) {
             return response()->json([
-                'message' => "User not found"
-            ]);
+                'message' => "Email or password incorrect"
+            ], 401);
         }
 
         $token = uuid_create();
@@ -64,6 +64,31 @@ class AuthController extends Controller
 
 
     public function register(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'username' => ['required'],
+            'email' => ['required'],
+            'password' => ['required'],
+        ]);
 
+        if($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid field',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        $token = uuid_create();
+
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => $request->password,
+            'token' => $token
+        ]);
+
+        return response()->json([
+            'message' => 'Register success',
+            'user' => $user
+        ]);
     }
 }
