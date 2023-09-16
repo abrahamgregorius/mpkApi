@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class NewsController extends Controller
 {
@@ -12,7 +13,11 @@ class NewsController extends Controller
      */
     public function index()
     {
-        //
+        $news = News::get();
+
+        return response()->json([
+            'news' => $news
+        ]);
     }
 
     /**
@@ -28,15 +33,49 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => ['required'],
+            'slug' => ['required'],
+            'content' => ['required'],
+            'category_id' => ['required'],
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'Invalid field',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $news = News::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'user_id' => auth()->user()->id,
+            'category_id' => $request->category_id,
+        ]);
+
+        return response()->json([
+            'message' => 'Add news success',
+            'news' => $news
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(News $news)
+    public function show(News $news, string $slug)
     {
-        //
+        $news = News::where('slug', $slug)->first();
+
+        if(!$news) {
+            return response()->json([
+                'message' => 'News not found'
+            ]);
+        }
+
+        return response()->json([
+            'news' => $news
+        ]);
     }
 
     /**
