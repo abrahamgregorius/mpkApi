@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +17,13 @@ Route::prefix('/v1')->group(function() {
     Route::post('/register', [AuthController::class, 'register']);
 
     Route::middleware('login')->prefix(function() {
+        // Form
         Route::get('/forms', [FormController::class, 'index']);
         Route::post('/forms/create', [FormController::class, 'store']);
         Route::get('/forms/{slug}', [FormController::class, 'show']);
+
+        // News
+        Route::get('/news', [NewsController::class, 'index']);
     });
     
 });
