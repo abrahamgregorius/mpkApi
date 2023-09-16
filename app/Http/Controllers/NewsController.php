@@ -35,7 +35,6 @@ class NewsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => ['required'],
-            'slug' => ['required'],
             'content' => ['required'],
             'category_id' => ['required'],
         ]);
@@ -47,8 +46,11 @@ class NewsController extends Controller
             ], 422);
         }
 
+        $slug = str($request->title)->slug();
+
         $news = News::create([
             'title' => $request->title,
+            'slug' => $slug,
             'content' => $request->content,
             'user_id' => auth()->user()->id,
             'category_id' => $request->category_id,
