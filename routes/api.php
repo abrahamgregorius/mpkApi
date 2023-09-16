@@ -16,7 +16,7 @@ Route::prefix('/v1')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/register', [AuthController::class, 'register']);
 
-    Route::middleware('login')->prefix(function() {
+    Route::middleware('login')->group(function() {
         // Form
         Route::get('/forms', [FormController::class, 'index']);
         Route::post('/forms/create', [FormController::class, 'store']);
@@ -24,7 +24,7 @@ Route::prefix('/v1')->group(function() {
 
         // News
         Route::get('/news', [NewsController::class, 'index']);
-        Route::get('/news/create', [NewsController::class, 'store']);
+        Route::post('/news/create', [NewsController::class, 'store']);
         Route::get('/news/{slug}', [NewsController::class, 'show']);
     });
     
