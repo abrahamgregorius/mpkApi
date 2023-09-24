@@ -26,6 +26,9 @@ Route::prefix('/v1')->group(function() {
         Route::get('/news', [NewsController::class, 'index']);
         Route::post('/news/create', [NewsController::class, 'store']);
         Route::get('/news/{slug}', [NewsController::class, 'show']);
+    
+        
+
     });
     
 });

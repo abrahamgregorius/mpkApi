@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
 {
@@ -33,13 +34,27 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+           'name' => ['required'], 
+           'email' => ['required', 'email'], 
+           'message' => ['required'], 
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid field',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         $form = Form::create([
             'name' => $request->name,
-            'class' => $request->class,
+            'email' => $request->email,
             'message' => $request->message,
         ]);
 
         return response()->json([
+            'message' => 'Message sent successfully',
             'form' => $form
         ]);
     }
