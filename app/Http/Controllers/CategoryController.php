@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -12,7 +13,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::get();
+
+        return response()->json([
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -28,7 +33,25 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'unique:categories,name']
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'Invalid field',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $category = Category::create([
+            'name' => $request->name
+        ]);
+
+        return response()->json([
+            'message' => 'Category added successfully',
+            'category' => $category 
+        ]);
     }
 
     /**
@@ -58,8 +81,20 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, string $slug)
     {
-        //
+        $category = Category::where('slug', $slug)->first();
+
+        if(!$category) {
+            return response()->json([
+                'message' => "Category not found"
+            ], 404);
+        }
+
+        $category->delete();
+
+        return response()->json([
+            'message' => 'Category deleted successfully'
+        ]);
     }
 }
