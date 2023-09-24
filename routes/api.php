@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\NewsController;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +23,11 @@ Route::prefix('/v1')->group(function() {
         Route::get('/forms', [FormController::class, 'index']);
         Route::post('/forms/create', [FormController::class, 'store']);
         Route::get('/forms/{slug}', [FormController::class, 'show']);
+
+        // Category
+        Route::get('/categories', [CategoryController::class, 'index']);
+        Route::post('/categories/create', [CategoryController::class, 'create']);
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
         // News
         Route::get('/news', [NewsController::class, 'index']);
