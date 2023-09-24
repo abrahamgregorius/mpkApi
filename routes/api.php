@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\NewsController;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -23,6 +24,11 @@ Route::prefix('/v1')->group(function() {
         Route::get('/forms', [FormController::class, 'index']);
         Route::post('/forms/create', [FormController::class, 'store']);
         Route::get('/forms/{slug}', [FormController::class, 'show']);
+
+        // Members
+        Route::get('/members', [MemberController::class, 'index']);
+        Route::post('/members/create', [MemberController::class, 'store']);
+        Route::delete('/members/{id}', [MemberController::class, '']);
 
         // Category
         Route::get('/categories', [CategoryController::class, 'index']);
