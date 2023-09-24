@@ -66,6 +66,12 @@ class FormController extends Controller
     {
         $form = Form::where('id', $id)->first();
 
+        if(!$form){
+            return response()->json([
+                'message' => 'Form not found'
+            ], 404);
+        }
+
         return response()->json([
             'form' => $form
         ]);
